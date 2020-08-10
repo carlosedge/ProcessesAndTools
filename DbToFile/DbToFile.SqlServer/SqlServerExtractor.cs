@@ -16,6 +16,7 @@ namespace DbToFile.SqlServer
         public SqlServerExtractor(string connectionString)
         {            
             _connection = new SqlConnection(connectionString);
+            _connection.Open();
         }
 
         ~SqlServerExtractor()
@@ -27,7 +28,7 @@ namespace DbToFile.SqlServer
             }    
         }
 
-        public List<DbTableContent> ExtractTable(TableGroup tableGroup)
+        public IEnumerable<DbTableContent> ExtractTable(TableGroup tableGroup)
         {
             List<DbTableContent> dataTableList = new List<DbTableContent>();
 
@@ -35,12 +36,12 @@ namespace DbToFile.SqlServer
             {
                 string query = BuildSqlQuery(tableName, tableGroup.PkName, tableGroup.TableColumns, tableGroup.Where);
                 SqlCommand command = new SqlCommand(query, _connection);
-                command.Connection.Open();
+                
                 SqlDataReader result = command.ExecuteReader();
 
                 DataTable dt = new DataTable();
                 dt.Load(result);
-                dataTableList.Add(new DbTableContent{TableName = tableName, Data = dt);
+                dataTableList.Add(new DbTableContent { TableName = tableName, Data = dt });
             }
             return dataTableList;
         }

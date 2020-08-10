@@ -8,18 +8,18 @@ using System.IO;
 
 namespace FileLoader.Excel
 {
-    public class ExcelLoader : IFileLoader
+    public class ExcelWriter : IFileWriter
     {
         private readonly XSSFWorkbook _workbook;
-        private readonly FileStream _fs;
-        public ExcelLoader(string filePath)
-        {
-            _fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        public ExcelWriter()        
+        {            
             _workbook = new XSSFWorkbook();
         }
 
-        public void AppendToFile(List<DbTableContent> dataSetList, string name)
+        public void AppendToFile(List<DbTableContent> dataSetList, string fileNameAndPath)
         {
+            FileStream _fs = new FileStream(fileNameAndPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+
             foreach (DbTableContent dataContent in dataSetList)
             {
                 try
@@ -42,13 +42,15 @@ namespace FileLoader.Excel
                         }
                         ++count;
                     }
-                    _workbook.Write(_fs); 
+                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Exception: " + ex.Message);
                 }
             }
+            _workbook.Write(_fs);
+            _workbook.Close();
         }
     }
 }

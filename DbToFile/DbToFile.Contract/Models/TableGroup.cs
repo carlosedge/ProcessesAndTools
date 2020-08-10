@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DbToFile.Contract.Models
 {
+    /// <summary>
+    /// Represents a tables' extraction strategy.
+    /// </summary>
     public class TableGroup
     {
         /// <summary>
